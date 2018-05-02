@@ -43,9 +43,7 @@ public class EmployeeController {
 	public ResponseEntity<Object> insertEmployee(@RequestBody Employee emp) {
 		logger.info("#### empId =>"+emp);
 		
-		emp.setFirstName(Sanitization.processSantizeData(emp.getFirstName()));
-		emp.setLastName(Sanitization.processSantizeData(emp.getLastName()));
-		emp.setEmpId(Sanitization.processSantizeData(emp.getEmpId()));
+		Sanitization.processSantizeData(emp);
 		
 		Optional<Employee> empOptional = empDao.getEmployeeByempId(emp.getEmpId());
 
@@ -61,11 +59,8 @@ public class EmployeeController {
 	public ResponseEntity<Object> updateEmployee(@RequestBody Employee emp) {
 		logger.info("####  empId =>"+emp);
 		
-		emp.setFirstName(Sanitization.processSantizeData(emp.getFirstName()));
-		emp.setLastName(Sanitization.processSantizeData(emp.getLastName()));
-		emp.setEmpId(Sanitization.processSantizeData(emp.getEmpId()));
-		
-		
+		Sanitization.processSantizeData(emp);
+
 		Optional<Employee> empOptional = empDao.getEmployeeById(emp.getId());
 
 		if (empOptional.isPresent()) {
