@@ -8,10 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.domain.Employee;
-//@Component
-//@Repository("Employee")
-//@RestResource(path="employees", rel="employees")
-//@RepositoryRestResource(collectionResourceRel = "employees", path = "employees")
+
 @Repository
 public interface EmployeeDao extends CrudRepository<Employee, Long>{
 
@@ -22,9 +19,11 @@ public interface EmployeeDao extends CrudRepository<Employee, Long>{
 	Optional<Employee> getEmployeeByempId(String empId);
 	
 	@Override
+	@Transactional
 	void delete(Employee entity);
 	 
 	@Override
+	@Transactional
 	Employee save(Employee entity);
 
 }
