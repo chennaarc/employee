@@ -3,8 +3,6 @@ package com.controller;
 import java.util.List;
 import java.util.Optional;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,26 +18,25 @@ import com.domain.Employee;
 import com.util.Sanitization;
 
 @RestController
-@RequestMapping("/employee")
 public class EmployeeController {
 	private static Logger logger = LogManager.getLogger(EmployeeController.class);
 	
 	@Autowired(required = true)
 	com.dao.EmployeeDao empDao;	
 	
-	@RequestMapping("/getAll")
+	@RequestMapping("/employees")
 	public List<Employee> getAll() {
 		logger.info("#### all ####");
 		return empDao.findAll();
 	}
 	
-	@RequestMapping("/getemployeebyid/{empId}")
+	@RequestMapping("/employee/{empId}")
 	public Optional<Employee> getEmployeeById(@PathVariable("empId") Long empId) {
 		logger.info("#### empId => "+empId);
 		return empDao.getEmployeeById(empId);
 	}
 	
-	@RequestMapping(method=RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, value="/insertemployee")
+	@RequestMapping(method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, value="/employee")
 	public ResponseEntity<Object> insertEmployee(@RequestBody Employee emp) {
 		logger.info("#### empId =>"+emp);
 		
@@ -55,12 +52,13 @@ public class EmployeeController {
 		return ResponseEntity.ok().body("Employee exists" );
 	}
 	
-	@RequestMapping(method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, value="/updateemployee")
+	@RequestMapping(method=RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, value="/employee")
 	public ResponseEntity<Object> updateEmployee(@RequestBody Employee emp) {
 		logger.info("####  empId =>"+emp);
 		
 		Sanitization.processSantizeData(emp);
-
+		
+		
 		Optional<Employee> empOptional = empDao.getEmployeeById(emp.getId());
 
 		if (empOptional.isPresent()) {
@@ -71,7 +69,7 @@ public class EmployeeController {
 		return ResponseEntity.ok().body("Employee object has not updated " );
 	}	
 	
-	@RequestMapping(method=RequestMethod.DELETE, value="/deleteemployee/{empId}")
+	@RequestMapping(method=RequestMethod.DELETE, value="/employee/{empId}")
 	public ResponseEntity<Object> deleteEmployee(@PathVariable("empId") Long empId) {
 			logger.info("### empId => "+empId);
 			Optional<Employee> empOptional = empDao.getEmployeeById(empId);
@@ -83,9 +81,5 @@ public class EmployeeController {
 			}
 		
 		return ResponseEntity.ok().body("problem in deleting Employee !");
-
 	}
-	
-
-
 }
